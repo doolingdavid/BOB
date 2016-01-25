@@ -152,9 +152,13 @@ Details of this transformation can be found in this blog post \cite{kuhn}, and p
 %Though these relationships often evades capture by traditional methods, it is possible to %surface them with the two machine learning techniques known as 
 \textbf{Random Forests} and \textbf{Neural Networks}
 are two machine learning algorithms based on two almost diametrically opposed learning philosophies.
-Random Forests are made up of an ensemble of independet \textbf{Decision trees} that are purposefully exposed to only subsets of the data. The general philosophy is that popularized by the book "The Wisdom of Crowds''~\cite{wisdom}.
-The idea is that a large number of independent not necessarily expert opinions converge on the correct answer when averaged. The success of this philosophy of prediction was startingly shown by the success of the political and world event predictions made by the prediction market site Intrade, before its forced closure by the Commodity Futures Trading Commission~\cite{cassidy}. %\footnote{``What killed Intrade?``, John Cassidy, \textit{The New Yorker}, 10 Mar, 2013, %accessed 11 Jan 2016, \url{http://www.newyorker.com/news/john-cassidy/what-killed-%intrade}.} 
- The other method used by IOBS to develop predictive models are called neural networks, and are modelled on how the human brain learns high level concepts from lower level ones. The philosophy behind the training and achieved accuracies of neural network classifiers and predictors is that of going to a seasoned expert. A Neural network trains from repeated exposure to the training data and improves its predictions with each pass over the data. The general philosophy is simlar to that represented by the well-known maxim that it takes 10,000 hours to become an `expert` in any given field~\cite{outliers}.
+Random Forests are made up of an ensemble of independet \textbf{Decision trees} that are purposefully exposed to only subsets of the data. The general philosophy is presented in the popular science book "The Wisdom of Crowds''~\cite{wisdom}.
+The idea is that a large number of independent non-expert opinions converge on the correct answer when averaged. The success of this philosophy of prediction was startingly shown by the success of the political and world event predictions made by the prediction market site Intrade, before its forced closure by the Commodity Futures Trading Commission~\cite{cassidy}. %\footnote{``What killed Intrade?``, John Cassidy, \textit{The New Yorker}, 10 Mar, 2013, %accessed 11 Jan 2016, \url{http://www.newyorker.com/news/john-cassidy/what-killed-%intrade}.} 
+ The other class of methods used by IOBS to develop predictive models are called neural networks, and are modelled on how the human brain learns high level concepts from lower level ones. 
+As opposed to the crowd-based wisdom of a random forest, a neural network is analgous to a seasoned expert. 
+%The philosophy behind the training and achieved accuracies of neural network classifiers and %predictors is that of going to a seasoned expert. 
+A Neural network learns from repeated exposure to the training data and improves its predictions with each pass over the data.
+% The %general philosophy is simlar to that represented by the well-known maxim that it takes %10,000 hours to become an `expert` in any given field~\cite{outliers}.
 %\footnote{``The 10,000 Hour Rule,` Malcolm Gladwell, accessed 11 Jan 2016, \url{http://%gladwell.com/outliers/the-10000-hour-rule/}.}
 
 
@@ -163,7 +167,7 @@ The idea is that a large number of independent not necessarily expert opinions c
 
 \subsection{Decision Trees and Random Forests}
 
-\textbf{Decision tree} classifiers are attractive models if we care about interpretability. Like the name decision tree suggests, we can think of this model as breaking down our data by making decisions based on asking a series of questions.
+\textbf{Decision tree} classifiers are attractive models because they can be intrepeted easily. Like the name decision tree suggests, we can think of this model as breaking down our data by making decisions based on asking a series of questions.
 Based on the features in our training set, the decision tree model learns a series of questions to infer the class labels of the samples. 
 %This procedure works with both categorical variables %and real numbers as features. For example, we could simply define a cut-off value along the %sepal width feature axis and ask a binary question "sepal width " $\geq$ 2.8 cm?"
 %Using the decision algorithm, we start at the tree root and split the data on the feature that %results in the largest information gain (IG), which will be explained in more detail in the %following section. In an iterative process, we can then repeat this splitting procedure at each %child node until the leaves are pure. This means that the samples at each node all belong to %the same class. In practice, this can result in a very deep tree with many nodes, which can %easily lead to overfitting. Thus, we typically want to prune the tree by setting a limit for the %maximal depth of the tree.
