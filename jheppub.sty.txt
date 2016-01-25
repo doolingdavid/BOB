@@ -19,7 +19,8 @@
 \ProvidesPackage{jheppub}[2013/03/21 r534]
 
 
-\gdef\@fpheader{Prepared for submission to JHEP}
+% \gdef\@fpheader{Prepared for submission to JHEP}
+\gdef\@fpheader{Exihibit II}
 \gdef\@journal{jhep}
 
 \newif\ifnotoc\notocfalse

@@ -1,34 +1,105 @@
-\documentclass{article}
+%\documentclass{article}
 
-\usepackage[utf8]{inputenc}
+
+\documentclass[a4paper,11pt]{article}
+\pdfoutput=1 % if your are submitting a pdflatex (i.e. if you have
+             % images in pdf, png or jpg format)
+
+\usepackage{jheppub} % for details on the use of the package, please
+                     % see the JHEP-author-manual
+
+
+
+
+%\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{geometry}
-\geometry{a4paper}
+%\usepackage{geometry}
+%\geometry{a4paper}
 \usepackage{hyperref}
 \usepackage{graphicx}
 \usepackage[table]{xcolor}
-
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{rotating}
 \usepackage[frenchb]{babel}
 
-\title{Machine Learning Applied to Cancer Surivival Prognosis}
+
+\definecolor{light-gray}{gray}{0.95}
+\newcommand{\code}[1]{\colorbox{light-gray}{\texttt{#1}}}
+\newcommand{\codewhite}[1]{\colorbox{white}{\texttt{#1}}}
+
+
+\title{Machine Learning Applied to Cancer Survival Prognosis}
 \author{Innovative Oncology Business Solutions \\
  4901 Lang Ave NE, Ste 204 \\
 Albuquerque, NM 87109 \\
 \url{http://www.innovativeobs.com/contact/}}
 \date{}
 
+
+
+\abstract{This short note describes activties at 
+\href{http://www.innovativeobs.com/}{IOBS} using two state-of-the-art machine learning techniques (random forests and neural networks) 
+that leverage the publically available information in the Surveillance, Epidemiolgy, and End Results (SEER) Program database of the National Cancer Institute (NCI) to make highly accurate predictive models of cancer survival curves. The most recent application of these types of models to prostate cancer also includes the effect of radiation therapy on survival prognosis. These techniques can easily be modified and applied to similar problem sets facing 
+Ion Beam Applications SA, such as providing a rigorous robust model to ascertain the Cancer Survival prognosis associated with the use of Proton Therapy to help measure the value proposition of outcomes to cost.}
+
+
 \begin{document}
 \maketitle
+\flushbottom
 %\tableofcontents
 
 
+\section{Introduction and Background}
+\label{sec:intro}
 
-\section{Introduction}
 
-This short note describes activties at 
-\href{http://www.innovativeobs.com/}{IOBS} using two state-of-the-art machine learning techniques (random forests and neural networks) 
-that leverage the publically available information in the Surveillance, Epidemiolgy, and End Results (SEER) Program database of the National Cancer Institute (NCI) to make highly accurate predictive models of cancer survival curves. The most recent application of these types of models to prostate cancer also includes the effect of radiation therapy on survival prognosis. These techniques can easily be modified and applied to similar problem sets facing 
-Ion Beam Applications SA, such as providing a rigorous demonstration of the effecicacy of proton therapy.
+
+Extracting actionable information from data is changing the fabric of modern business. A class of techniques that transforms data into actionable information goes by the name of Machine Learning \cite{pythonmachinelearning}.
+Machine Learning has recently become a popular method to answer questions and solve problems that are too complex to solve via traditional methods, such as that of accurately predicting cancer survival prognosis curves for individual patients.
+The Surveillance, Epidemiolgy, and End Results (SEER) Program of the National Cancer Institute (NCI) has been collecting data because intuitively researchers feel confident that this data is capturing information that has buried within it useful information in the form of  relationships between the types of data collected (demographic as well as staging information) and the survival outcomes.
+Though this relationship evades capture by traditional methods, it is possible to surface it with the two machine learning techniques known as \textbf{Random Forests} and \textbf{Neural Networks}. These two methods produce very similar results when applied to the SEER dataset, and are based on two almost diametrically opposed learning philosophies, which lends confidence in the validity of the results.
+
+The Surveillance, Epidemiolgy, and End Results (SEER) Program of the National Cancer Institute (NCI) is the most recognized authoritative source of information on cancer incidence and survival in the United States. SEER currently collects and publishes cancer incidence and survival data from population-based cancer registries covering approximately 28 percent of the US population.
+
+
+Quoting directly from the SEER
+website \citep{seerwebsite}:
+
+\begin{quote}
+The SEER program registries routinely collect data on patient demographics, primary tumor site, tumor morphology and stage at diagnosis, first course of treatment, and follow-up for vital status. This program is the only comprehensive source of population-based information in the United States that includes stage of cancer at the time of diagnosis and patient survival data. The mortality data reported by SEER are provided by the National Center for Health Statistics. The population data used in calculating cancer rates is obtained periodically from the Census Bureau. Updated annually and provided as a public service in print and electronic formats, SEER data are used by thousands of researchers, clinicians, public health officials, legislators, policymakers, community groups, and the public.
+\end{quote}
+
+
+One characterstic of the SEER data and that is shared by many datasets in the medical field 
+goes by the name of "censored data.'' The SEER data contains the number of months each patient survived, as well as an indicator variable showing whether or not the patient is still alive at the end of the data collection period.
+Methods to deal effectively with this kind of "right-censored data'' include Kaplan-Meier curves
+and Cox's Proportional Hazard models \cite{cam}. The Kaplan-Meier techniques only give estimates for cohorts of patients and are not applicable for predicting the surival curve for a single patient, and the Cox Proportional Hazard models require a fairly restrictive set ot assumptions to be satisifed in order to yield reliable results. In addition, the Cox Proportional Hazard models are not able to capture the nonlinear relationships between the given data fields that go into making predictions; they can only capture the first-order linear relationships.
+
+Previous work by other researchers in the community applying machine learning methods to subsets of the SEER data include creative attempts to deal with the problems presented by  "right-censored data." The authors of ~\cite{ISI:000337467400005} use semi-supervised learning techniques to predict 5 year survival, essentially imputing values for SEER records where the survival months infomation is censored at a value less than 5 years. The authors of ~\cite{ISI:000355882700012} investigate the effects of comordbidities; i.e., patients with two different cancer diagnosises, but their treatment of the censored data underestimates the survival probabilities. All records representing patients who survived at least 60 months as well as all those who died earlier than 60 months were considered, but patients alive prior to 60 months but censored out of the study before 60 months were not included. This treatment biases the data and the predictions, leading to overly pessimistic survival probablilites predicted by the trained models.
+
+
+
+To overcome these limitations of the traditional methods, IOBS has applied a little-known technique not seen in the literature to transform the SEER data to make it amenable to more powerful machine learning methods. The essential idea is to recast the problem to an appropriate discrete classification problem instead of a regression problem (predicting survival months). Treating months after diagnosis as just another discrete feature, the SEER data (or any other right-censored data) can be transformed simply so as to make predictions for the hazard function
+ (the probability of dying in the next month, given that the patient has not yet died).
+The full survival function can then be derived from the hazard function.
+Details of this transformation can be found in this blog post \cite{kuhn}, and pseudocode for this transformation is provided in section~(\ref{subsec:pseudocode}).
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Introduction}
+
+%This short note describes activties at 
+%\href{http://www.innovativeobs.com/}{IOBS} using two state-of-the-art machine learning %techniques (random forests and neural networks) 
+%that leverage the publically available information in the Surveillance, Epidemiolgy, and End %Results (SEER) Program database of the National Cancer Institute (NCI) to make highly %accurate predictive models of cancer survival curves. The most recent application of these %types of models to prostate cancer also includes the effect of radiation therapy on survival %prognosis. These techniques can easily be modified and applied to similar problem sets facing 
+%Ion Beam Applications SA, such as providing a rigorous demonstration of the effecicacy of %proton therapy.
 
 
 
@@ -36,29 +107,29 @@ Ion Beam Applications SA, such as providing a rigorous demonstration of the effe
 
 
 
-\section{SEER Data}
+%\section{SEER Data}
 
-The Surveillance, Epidemiolgy, and End Results (SEER) Program of the National Cancer Institute (NCI) is the most recognized authoritative source of information on cancer incidence and survival in the United States. SEER currently collects and publishes cancer incidence and survival data from population-based cancer registries covering approximately 28 percent of the US population.
+%The Surveillance, Epidemiolgy, and End Results (SEER) Program of the National Cancer %Institute (NCI) is the most recognized authoritative source of information on cancer incidence %and survival in the United States. SEER currently collects and publishes cancer incidence and %survival data from population-based cancer registries covering approximately 28 percent of the %US population.
 
-Quoting directly from the SEER
-website:\footnote{National Cancer Institute, the Surveillance, Epidemiology, and End Results Program. Available at: \url{http://seer.cancer.gov/about/}}
+%Quoting directly from the SEER
+%website:\footnote{National Cancer Institute, the Surveillance, Epidemiology, and End Results %Program. Available at: \url{http://seer.cancer.gov/about/}}
 
-\begin{quote}
-The SEER program registries routinely collect data on patient demographics, primary tumor site, tumor morphology and stage at diagnosis, first course of treatment, and follow-up for vital status. This program is the only comprehensive source of population-based information in the United States that includes stage of cancer at the time of diagnosis and patient survival data. The mortality data reported by SEER are provided by the National Center for Health Statistics. The population data used in calculating cancer rates is obtained periodically from the Census Bureau. Updated annually and provided as a public service in print and electronic formats, SEER data are used by thousands of researchers, clinicians, public health officials, legislators, policymakers, community groups, and the public.
-\end{quote}
+%\begin{quote}
+%The SEER program registries routinely collect data on patient demographics, primary tumor %site, tumor morphology and stage at diagnosis, first course of treatment, and follow-up for vital %status. This program is the only comprehensive source of population-based information in the %United States that includes stage of cancer at the time of diagnosis and patient survival data. %The mortality data reported by SEER are provided by the National Center for Health Statistics. %The population data used in calculating cancer rates is obtained periodically from the Census %Bureau. Updated annually and provided as a public service in print and electronic formats, %SEER data are used by thousands of researchers, clinicians, public health officials, legislators, %policymakers, community groups, and the public.
+%\end{quote}
 
 
 
-One characterstic of the SEER data and that is shared by many datasets in the medical field 
-goes by the name of ``censored data.`` The SEER data contains the number of months each patient survived, as well as an indicator variable showing whether or not the patient is still alive at the end of the data collection period. For example, some patients that were diagnosed with colon cancer in June of 2010 and that are still alive at the end of the last SEER data release, will have some value for survival months, say 60 months, as well as an indicator variable, `vital$\_$status$\_$recode`, indicating that they are still alive. Other patients also diagnosed in June of 2010 will have some value for surival months listed, say 17 months, and for these patients then indicator variable `vital$\_$status$\_$recode` will indicate that they are deceased. 
-Methods to deal effectively with this kind of `right-censored data` include Kaplan-Meier curves
-and Cox's Proportional Hazard models.\footnote{ Cam Davidson-Pilon, ``Quickstart -- lifelines 0.8.0.1 documentation,`` accessed 11 Jan 2016, \url{http://lifelines.readthedocs.org/en/latest/Quickstart.html}.} The Kaplan-Meier techniques only give estimates for cohorts of patients and are not applicable for predicting the surival curve for a single patient, and the Cox Proportional Hazard models require a fairly restrictive set ot assumptions to be satisifed in order to yield reliable results. In addition, the Cox Proportional Hazard models are not able to capture the nonlinear relationships between the given data fields that go into making predicitons; they can only capture the first-order linear relationships.
+%One characterstic of the SEER data and that is shared by many datasets in the medical field 
+%goes by the name of ``censored data.`` The SEER data contains the number of months each %patient survived, as well as an indicator variable showing whether or not the patient is still %alive at the end of the data collection period. For example, some patients that were diagnosed %with colon cancer in June of 2010 and that are still alive at the end of the last SEER data %release, will have some value for survival months, say 60 months, as well as an indicator %variable, `vital$\_$status$\_$recode`, indicating that they are still alive. Other patients also %diagnosed in June of 2010 will have some value for surival months listed, say 17 months, and %for these patients then indicator variable `vital$\_$status$\_$recode` will indicate that they are %deceased. 
+%Methods to deal effectively with this kind of `right-censored data` include Kaplan-Meier curves
+%and Cox's Proportional Hazard models.\footnote{ Cam Davidson-Pilon, ``Quickstart -- lifelines %0.8.0.1 documentation,`` accessed 11 Jan 2016, \url{http://lifelines.readthedocs.org/en/latest/%Quickstart.html}.} The Kaplan-Meier techniques only give estimates for cohorts of patients and %are not applicable for predicting the surival curve for a single patient, and the Cox Proportional %Hazard models require a fairly restrictive set ot assumptions to be satisifed in order to yield %reliable results. In addition, the Cox Proportional Hazard models are not able to capture the %nonlinear relationships between the given data fields that go into making predicitons; they can %only capture the first-order linear relationships.
 
-To overcome these limitations of the traditional methods, IOBS has applied a little-known technique to transform the SEER data to make it amenable to more powerful machine learning methods. The basic idea is to explictly consider each month of survival after diagnosis as a new data point. For example, a patient that is currenly listed in the SEER data with a `vital$\_$status$\_$recode` indicating that they are still alive, and with a `survival$\_$months` value of 5, would be handled by replacing this data record with 6 additional records corresponding to this patient.
-These additional records are identical to the orginal, with the important exception of `survival$\_$months` ranging from 0 through 5. Similar transformations can be applied to the data records where the `vital$\_$status$\_$recode` variable indicates that the patient is deceased.
-A duplicate of the record is created for each month prior to the value of `survival$\_$months.`
-For example, if a patient is recorded as deceased and as having survived 10 months, the transformed data set would contain 11 records for that patient, where `survival$\_$months` ranges from 0 through 10, and `vital$\_$status$\_$recode` indicates that they are alive for months 0 through 9, and deceased for month 10.
-Details of this transformation can be found in this blog post.\footnote{Ben Kuhn, ``Decision trees for survival analysis,`` accessed 11 Jan 2016, \url{http://www.benkuhn.net/survival-trees}.}
+%To overcome these limitations of the traditional methods, IOBS has applied a little-known %technique to transform the SEER data to make it amenable to more powerful machine learning %methods. The basic idea is to explictly consider each month of survival after diagnosis as a new %data point. For example, a patient that is currenly listed in the SEER data with a `vital$\_%%$status$\_$recode` indicating that they are still alive, and with a `survival$\_$months` value of %5, would be handled by replacing this data record with 6 additional records corresponding to %this patient.
+%These additional records are identical to the orginal, with the important exception of `survival$%\_$months` ranging from 0 through 5. Similar transformations can be applied to the data %records where the `vital$\_$status$\_$recode` variable indicates that the patient is deceased.
+%A duplicate of the record is created for each month prior to the value of `survival$\_$months.`
+%For example, if a patient is recorded as deceased and as having survived 10 months, the %transformed data set would contain 11 records for that patient, where `survival$\_$months` %ranges from 0 through 10, and `vital$\_$status$\_$recode` indicates that they are alive for %months 0 through 9, and deceased for month 10.
+%Details of this transformation can be found in this blog post.\footnote{Ben Kuhn, ``Decision %trees for survival analysis,`` accessed 11 Jan 2016, \url{http://www.benkuhn.net/survival-%trees}.}
 
 
 
@@ -70,11 +141,15 @@ Details of this transformation can be found in this blog post.\footnote{Ben Kuhn
 
 
 Extracting actionable information from data is changing the fabric of modern business. A class of techniques that performs this transformation of data into actionable information goes by the name of Machine Learning.
-Machine Learning has recently become a popular method to answer questions and solve problems that are too complex to solve via traditional methods. 
-One class of problems for which these algorithms are approriate is generally referred to as 
-\textit{function approximation}. SEER has been collecting data because intuitively researchers feel confident that this data is capturing information that has buried within it useful information in the form of  relationships between the types of data collected (demographic as well as staging information) and the survival outcomes.
-Though this relationship evades capture by traditional methods, it is possible to surface it with the two machine learning techniques known as \textbf{Random Forests} and \textbf{Neural Networks}. These two methods produce very similar results when applied to the SEER dataset, and are based on two almost diametrically opposed learning philosophies, which lends confidence in the validity of the results. Random Forests are made up of an ensemble of independet \textbf{Decision trees} that are purposefully exposed to only subsets of the data. The general philosophy is that popularized by the book ``The Wisdom of Crowds.``\footnote{\url{http://www.amazon.com/The-Wisdom-Crowds-James-Surowiecki/dp/0385721706}.}. The idea is that a large number of independent, not necessarily expert opinions, when averaged converge on the correct answer. The success of this philosphy of prediction was startingly shown by the success of the political and world event predictions made by the prediction market site Intrade, before its forced closure by the Commodity Futures Trading Commission.\footnote{``What killed Intrade?``, John Cassidy, \textit{The New Yorker}, 10 Mar, 2013, accessed 11 Jan 2016, \url{http://www.newyorker.com/news/john-cassidy/what-killed-intrade}.}
-The other method used by IOBS to develop predictive models are called neural networks, and are modelled on how the human brain learns high level concepts from lower level ones. The philosphy behind the training and achieved accuracies of neural network classifiers and predictors is that of going to a seasoned expert. A Neural network trains by repeatedly by exposed to the training data over and over and improving its predictions with each pass over the data. The general philosphy is simlar to that represented by the well-known maxim that it takes 10,000 hours to become an `expert` in any given field.\footnote{``The 10,000 Hour Rule,` Malcolm Gladwell, accessed 11 Jan 2016, \url{http://gladwell.com/outliers/the-10000-hour-rule/}.}
+%Machine Learning has recently become a popular method to answer questions and solve %problems that are too complex to solve via traditional methods. 
+%One class of problems for which these algorithms are approriate is generally referred to as 
+%\textit{function approximation}. SEER has been collecting data because intuitively researchers %feel confident that this data is capturing information that has buried within it useful %information in the form of  relationships between the types of data collected (demographic as %well as staging information) and the survival outcomes.
+Though these relationships often evades capture by traditional methods, it is possible to surface them with the two machine learning techniques known as \textbf{Random Forests} and \textbf{Neural Networks}.
+These two methods produce very similar results when applied to the SEER dataset, and are based on two almost diametrically opposed learning philosophies, which lends confidence in the validity of the results. 
+Random Forests are made up of an ensemble of independet \textbf{Decision trees} that are purposefully exposed to only subsets of the data. The general philosophy is that popularized by the book "The Wisdom of Crowds''~\cite{wisdom}.
+The idea is that a large number of independent not necessarily expert opinions converge on the correct answer when averaged. The success of this philosophy of prediction was startingly shown by the success of the political and world event predictions made by the prediction market site Intrade, before its forced closure by the Commodity Futures Trading Commission~\cite{cassidy}. %\footnote{``What killed Intrade?``, John Cassidy, \textit{The New Yorker}, 10 Mar, 2013, %accessed 11 Jan 2016, \url{http://www.newyorker.com/news/john-cassidy/what-killed-%intrade}.} 
+ The other method used by IOBS to develop predictive models are called neural networks, and are modelled on how the human brain learns high level concepts from lower level ones. The philosophy behind the training and achieved accuracies of neural network classifiers and predictors is that of going to a seasoned expert. A Neural network trains from repeated exposure to the training data and improves its predictions with each pass over the data. The general philosophy is simlar to that represented by the well-known maxim that it takes 10,000 hours to become an `expert` in any given field~\cite{outliers}.
+%\footnote{``The 10,000 Hour Rule,` Malcolm Gladwell, accessed 11 Jan 2016, \url{http://%gladwell.com/outliers/the-10000-hour-rule/}.}
 
 
 
@@ -268,7 +343,7 @@ The goal behind \textbf{ensemble methods} is to combine different classifiers in
 %P (y \geq k) = \sum_{k=6}^{11} {11 \choose k} 0.25^{k} (1 - 0.25)^{11 - k} = 0.034
 %\end{equation}
 
-Figure \ref{fig:ensemble} illustrates the power of ensemble methods; the Figure illustrates how the ensemble error rate is much lower than the Base learner error rate, as long as the Base learner error rate is less than 0.5. The Figure illustrates this effect for an ensemble of 500 base learners.
+Figure~(\ref{fig:ensemble}) illustrates the power of ensemble methods; the Figure illustrates how the ensemble error rate is much lower than the Base learner error rate, as long as the Base learner error rate is less than 0.5. The Figure illustrates this effect for an ensemble of 500 base learners.
 
 
 
@@ -279,86 +354,111 @@ Figure \ref{fig:ensemble} illustrates the power of ensemble methods; the Figure 
 %As we can see, the error rate of the ensemble (0.034) is much lower than the error rate of %each individual classifier (0.25) if all the assumptions are met. Note that, in this simplified %illustration, a 50-50 split by an even number of classifiers \textit{n} is treated as an error, %whereas this is only trye half of the time. To compare such an idealistic ensemble classifier to a %base classifier over a range of different base error rates, let's implement the probability mass %function in Python:
 
 \begin{figure}[!ht]
- \caption{Ensemble Methods.}
-  \label{fig:ensemble}
   \centering
     \includegraphics[scale=1.0]{ensemble}
+\caption{\label{fig:ensemble} Illustration of ensemble methods showing how a collection of base learners with poor accuracy can combine to produce an accurate ensemble learner.}
 \end{figure}
 
 
-IOBS has chosen to use the Python scikit-learn implemenation of the Random Forest machine learning classifier.\footnote{`3.2.4.3.1. sklearn.ensemble.RandomForestClassifier,` accessed 11 Jan 2016, \url{http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html}.}
-Random Forests are frequent winners of the Kaggle machine learning competitions.\footnote{`Random Forests | Kaggle,` accessed 11 Jan 2016, \url{https://www.kaggle.com/wiki/RandomForests}.}
+IOBS has chosen to use the Python scikit-learn implemenation of the Random Forest machine learning classifier~\cite{rf}.
+Random Forests are frequent winners of the Kaggle machine learning competitions~\cite{kagglerf}.
 
 
 
 
 \subsection{Neural Networks and Deep Learning}
 
-Neural networks are a biologically-inspired progrmming paradigm that enable computers to learn from observational data.\footnote{Michael Nielsen, ``Neural Networks and Deep Learning,`` accessed 11 Jan 2016, \url{http://neuralnetworksanddeeplearning.com/}.}
-
-
-As you may know, \textbf{deep learning} is getting a lot of press and is without any doubt the hottest topic in the machine learning field. Deep learning can be understood as a set of algorithms that were developed to train \textbf{artificial neural networks} with many layers most efficiently.
+Neural networks are a biologically-inspired progrmming paradigm that enable computers to learn from observational data~\cite{deeplearning}.
+%As you may know, \textbf{deep learning} is getting a lot of press and is without any doubt the %hottest topic in the machine learning field.
+Deep learning can be understood as a set of algorithms that were developed to train \textbf{artificial neural networks} with many layers most efficiently.
  Neural networks are a hot topic not only in academic research, but also in big technology companies such as Facebook, Microsoft, and Google who invest heavily in artificial neural networks and deep learning research. As of today, complex neural networks powered by deep learning algorithms are considered as state-of-the-art when it comes to complex problem solving such as image and voice recognition.
-In addition, the pharmaceutical industry recently started to use deep learning techniques for drug discovery and toxicity prediction, and research has shown that these novel techniques substantially exceed the performance of traditional methods for virtual screening.\footnote{ (T. Unterthiner, A. Mayr, G. Klambauer, and S. Hochreiter, Toxicity Prediction using deep learning, 
-\url{http://arxiv.org/abs/1503.01445}.}
+In addition, the pharmaceutical industry recently started to use deep learning techniques for drug discovery and toxicity prediction, and research has shown that these novel techniques substantially exceed the performance of traditional methods for virtual screening~\cite{toxicity}.
 
-IOBS has chosen to use the neural network implementation Keras developed at MIT.\footnote{``Keras Documentation,`` accessed 11 Jan 2016, \url{http://keras.io/}.}
+IOBS has chosen to use the neural network implementation Keras developed at MIT.
+Keras was initially developed as part of the research effort of project ONEIROS (Open-ended Neuro-Electronic Intelligent Robot Operating System)~\cite{keras}.
 Keras is a minimalist, highly modular neural networks library, written in Python and capable of running on top of either TensorFlow or Theano.
 
 \section{Survival Curve Prediction Apps}
 
 Below is a list of some web applications developed by IOBS.
-For each of the cancer types (colon, breast, lung, and prostate), a model has been developed using random forests and one using neural networks. The models were evaluted using the AUC (Area Under Curve) performance evaluation metric on test data (data not used in the training of the models), typically achieving AUC scores  $\approx .8$.\footnote{``AUC | Kaggle,'' Kaggle Website, \url{https://www.kaggle.com/wiki/AUC}, accessed 11 Jan 2016.}
+For each of the cancer types (colon, breast, lung, and prostate), a model has been developed using random forests and one using neural networks. The models were evaluted using the AUC (Area Under Curve) performance evaluation metric on test data (data not used in the training of the models), typically achieving AUC scores  $\approx .8$, as shown in Table~(\ref{tab:AUC}).\footnote{``AUC | Kaggle,'' Kaggle Website, \url{https://www.kaggle.com/wiki/AUC}, accessed 11 Jan 2016.}
  
 
-\begin{enumerate}
+\begin{table}[tbp]
+\begin{center}
+\rowcolors{1}{white}{light-gray}
+\begin{tabular}{lrrr}
+\toprule
+%\rowcolors{1}{white}{yellow}
+%\hline
+Model & 6 Months AUC & 12 Months AUC & 60 Months AUC \\ 
+\midrule
+Breast RF &  .846       &     .885           &  .844 \\ 
+Breast NN &   .855      &     .867      &    .836 \\ 
+Colon RF  &     .804          &      .806           &      .828           \\ 
+Colon NN   &     .797          &          .804         &   .841  \\ 
+Lung RF    &      .772               &        .796               &   .874  \\ 
+Lung NN    &        .765              &        .796               &  .875  \\
+\bottomrule
+\end{tabular}
+\caption{\label{tab:AUC} AUC values for the Random Forest and Neural Networks model
+binary classifiers derived from the full survival curve predictions.}
+\end{center}
+\end{table}
+
+
+
+\begin{enumerate}[noitemsep]
 \item breast cancer 
-    \begin{enumerate}
+    \begin{enumerate}[noitemsep]
     \item random forest: \url{http://ming-cancer.herokuapp.com/}
-    \item neural network: \url{http://ming-cancer.herokuapp.com/}
+    \item neural network: \url{http://breastcancer-neuralnetwork.herokuapp.com/}
     \end{enumerate}
 \item lung cancer
-   \begin{enumerate}
-   \item random forest: \url{http://ming-cancer.herokuapp.com/}
-   \item neural network: \url{http://ming-cancer.herokuapp.com/}
+   \begin{enumerate}[noitemsep]
+   \item random forest: \url{http://lung-cancer.herokuapp.com/}
+   \item neural network: \url{http://lungnn.herokuapp.com/}
     \end{enumerate}
 \item colon cancer
-  \begin{enumerate}
-   \item random forest: \url{http://ming-cancer.herokuapp.com/}
-   \item neural network: \url{http://ming-cancer.herokuapp.com/}
+  \begin{enumerate}[noitemsep]
+   \item random forest: \url{http://colon-cancer.herokuapp.com/}
+   \item neural network: \url{http://coloncancernn.herokuapp.com/}
    \end{enumerate}
 \item prostate cancer
-  \begin{enumerate}
-   \item random forest: \url{http://ming-cancer.herokuapp.com/}
+  \begin{enumerate}[noitemsep]
+   \item random forest: \url{http://prostate-cancer.herokuapp.com/}
    \end{enumerate}
 \end{enumerate}
 
 
 These machine learning models are used to predict survival curves for a given set of input data. 
 The resulting surival curves predict the probablitiy that a patient with the given input data will survive at least up to month $x$. For example, using the Colon Cancer neural network app, and 
-inputing the values:
+inputing the values listed in Table~(\ref{tab:boston1940}) results in the survival curve depicted in Figure~(\ref{fig:boston1940}); the predicted probablities of living 
+at least 6, 12, and 60 months are .89, .82, and .488, respectively.
 
-\begin{table}
+
+\begin{table}[tbp]
 \begin{center}
-\rowcolors{1}{white}{yellow}
-\begin{tabular}{| l | l|}
-  \hline
-  Variable  & Value \\ \hline
-  What is the tumor size (mm) & 300 \\  \hline
-  What is the patient's address? & boston massachusetts \\ \hline
-  Grade & moderately differentiated \\  \hline
-  Histology & adenomas and adenocarcinomas \\ \hline
-  Laterality & not a paired site \\  \hline
- Martial Status at Dx & Single, never married \\  \hline
- Month of Diagnosis & Jan \\  \hline
- How many primaries & 1 \\  \hline
-  Race$\_$ethnicity & White \\  \hline
-  seer$\_$historic$\_$stage$\_$a  & Regional \\ \hline
-  Gender & Male \\  \hline
-  spanish$\_$hispanic$\_$origin & Non-spanish/Non-hispanic \\ \hline
- Year of Birth & 1940 \\  \hline
+\rowcolors{1}{white}{light-gray}
+\begin{tabular}{lr}
+\toprule
+  Variable  & Value \\ 
+\midrule
+  What is the tumor size (mm) & 300 \\  
+  What is the patient's address? & boston massachusetts \\ 
+  Grade & moderately differentiated \\  
+  Histology & adenomas and adenocarcinomas \\ 
+  Laterality & not a paired site \\  
+ Martial Status at Dx & Single, never married \\  
+ Month of Diagnosis & Jan \\  
+ How many primaries & 1 \\  
+  Race$\_$ethnicity & White \\  
+  seer$\_$historic$\_$stage$\_$a  & Regional \\ 
+  Gender & Male \\  
+  spanish$\_$hispanic$\_$origin & Non-spanish/Non-hispanic \\ 
+ Year of Birth & 1940 \\  
   Year of Diagnosis & 2010 \\
-\hline
+\bottomrule
 \end{tabular}
 \caption{Example input data to the Colon Cancer neural network app.}
 \label{tab:boston1940}
@@ -366,29 +466,34 @@ inputing the values:
 \end{table}
 
 
-Figure \ref{fig:boston1940} shows the resulting survival curve; the predicted probablities of living 
-at least 6, 12, and 60 months are .89, .82, and .488, respectively.
-
 \begin{figure}[!ht]
  \caption{Colon Cancer Survival Curve.}
   \label{fig:boston1940}
   \centering
     \includegraphics[scale=.5]{boston1940}
+\caption{\label{fig:boston1940} Colon Cancer Survival Curve predicted from the data in 
+Table~(\ref{tab:boston1940} using the neural network web app \url{http://ming-cancer.herokuapp.com/}.}
 \end{figure}
 
 
 
-Changing the data in Table \ref{tab:boston1940} so that the address field is changed from Boston, Massachusetts to Denver, Colorado but keeping all other variables are unchanged results in the predicted probabilities of living at least 6, 12, and 60 months: .945, .902, .665. 
+
+
+
+
+
+
+Changing the data in Table~(\ref{tab:boston1940}) so that the address field is changed from Boston, Massachusetts to Denver, Colorado but keeping all other variables are unchanged results in the predicted probabilities of living at least 6, 12, and 60 months: .945, .902, .665. 
 Behind the scenes, the apps use the input to the address field to make a call to the Google Maps API to convert the address into a latitude, longitude and elevation.
 These probablities are noticeably higher and reflect both the documented effects of longitude and elevation on cancer treatment and prognosis in the United States.
 
 An additional means of validating the predictions of these models is by comparing their predictions to each other for the same set of input data. IOBS is in the process of performing a systematic analysis of this type; all exploratory investigation to identify trends has shown the same effects for both the random forest and neural network versions of the models for each cacner type. For example, the effects of marital status and gender on survival prognosis in lung cancer (both men and women benefit from being married, but the effects are much more pronounced for men), are born out in both the random forest and neural network models. 
 
-\section{Prostate Cancer and Radiation Therapy}
+\section{Cancer and Proton/Photon Therapy}
 
-The Lung, Breast, and Colon Cancer models described above take into consideration only variables that are known when a patient is first diagnosed. In constrast, the Prostate model also includes the SEER variable `rx$\_$summ$\_$radiation,` which can take one one of the values:
+The Lung, Breast, and Colon Cancer models described above take into consideration only variables that are known when a patient is first diagnosed. In constrast, the Prostate model also includes the SEER variable \codewhite{rx$\_$summ$\_$radiation}, which can take one one of the values:
 
-\begin{itemize}
+\begin{itemize}[noitemsep]
 \item Beam radiation
 \item Combination of Beam and either implants or isotopes
 \item None; diagnosed at autopsy
@@ -400,41 +505,82 @@ The Lung, Breast, and Colon Cancer models described above take into consideratio
 \item Unknown if radiation administered
 \end{itemize}
 
-As a first pass at investigating the effects of Radiation Therapy, especially Proton Therapy, one can compare different results of the model for different values of the above `rx$\_$summ$\_$radiation` variable. For example, using the input data in Table \ref{tab:abq}, the model predicts a .52 probability of surviving 60 months. Changing the value of rx$\_$summ$\_$radiation to `Beam radiation` results in a new predicted probability of surviving at least 60 months of .974.
+As a first pass at investigating the effects of Radiation Therapy, especially Proton Therapy, one can compare different results of the model for different values of the above \codewhite{rx$\_$summ$\_$radiation} variable. For example, using the input data in Table \ref{tab:abq}, the model predicts a .52 probability of surviving 60 months. Changing the value of \codewhite{rx$\_$summ$\_$radiation} to \textbf{Beam radiation} results in a new predicted probability of surviving at least 60 months of .974.
 Clearly, the effects of beam radiation are positive and large; the leap from observation to causality can be hazardous, however, if not analyzed correctly\footnote{``Simpson's Paradox,'' \url{http://www.intuitor.com/statistics/SimpsonsParadox.html}, accessed 11 Jan 2016.}. IOBS is looking into making these conclusions drawn from evidence-based, machine learning models more rigorous by firmly vetting them within the cutting-edge methods of Causality Calculus as pioneered by Judea Pearl.\footnote{Judea Pearl homepage at the University of California, Los Angeles, \url{http://bayes.cs.ucla.edu/jp_home.html}, accessed 11 Jan 2016.}
 
 
 
 
 
-\begin{table}
+\begin{table}[tbp]
 \begin{center}
-\rowcolors{1}{white}{yellow}
-\begin{tabular}{| l | l|}
-  \hline
-  Variable  & Value \\ \hline
-  What is the tumor size (mm) & 40 \\  \hline
-  What is the patient's address? & Albuquerque new mexico \\ \hline
-  Grade & moderately differentiated \\  \hline
-  Histology & adenomas and adenocarcinomas \\ \hline
-  Laterality & not a paired site \\  \hline
- Martial Status at Dx & Married including common law \\  \hline
- Month of Diagnosis & Mar \\  \hline
- How many primaries & 1 \\  \hline
-  Race$\_$ethnicity & White \\  \hline
+\rowcolors{1}{white}{light-gray}
+\begin{tabular}{lr}
+  \toprule
+  Variable  & Value \\ 
+\midrule
+  What is the tumor size (mm) & 40 \\  
+  What is the patient's address? & Albuquerque new mexico \\ 
+  Grade & moderately differentiated \\  
+  Histology & adenomas and adenocarcinomas \\ 
+  Laterality & not a paired site \\  
+ Martial Status at Dx & Married including common law \\  
+ Month of Diagnosis & Mar \\  
+ How many primaries & 1 \\  
+  Race$\_$ethnicity & White \\  
  rx$\_$summ$\_$radiation & Patient or patient's guardian refused radiation therapy \\
-  seer$\_$historic$\_$stage$\_$a  & Localized/Regional \\ \hline
-  Gender & Male \\  \hline
-  spanish$\_$hispanic$\_$origin & Non-spanish/Non-hispanic \\ \hline
- Year of Birth & 1960 \\  \hline
+  seer$\_$historic$\_$stage$\_$a  & Localized/Regional \\ 
+  Gender & Male \\  
+  spanish$\_$hispanic$\_$origin & Non-spanish/Non-hispanic \\ 
+ Year of Birth & 1960 \\  
   Year of Diagnosis & 2013 \\
-\hline
+\bottomrule
 \end{tabular}
-\caption{Example input data to the Prostate Cancer random forest app.}
+\caption{Example input data to the Prostate Cancer random forest Web app \url{http://prostate-cancer.herokuapp.com/}}
 \label{tab:abq}
 \end{center}
 \end{table}
 
+
+\appendix
+\section{Pseudocode for the Data Transformation}
+\label{subsec:pseudocode}
+
+\begin{verbatim}
+def train(X, T, D)
+    // X, T, D are the original dataset
+    X' = []
+    D' = []
+
+    // the transformation
+    for each index i in X:
+        for t=1 to T[i]:
+            new_D = (0 if t < T[i], else D[i])
+            append new_D to D'
+            new_X = (X[i], t)
+            append new_X to X'
+
+    return a decision tree trained on (X', D')
+
+def pmf(h, X)
+    // X is a single datapoint
+    // returns an array A where A[i] = P(Y = i | X)
+    A = []
+    p_so_far = 1 // this is p(T >= t | X)
+    for t = 1 to (the last month where h has any data):
+        // h knows p(T = t | T >= t, X), we call this p_cur
+        p_cur = h's prediction for (X, t)
+        append (p_so_far * p_cur) to A
+        p_so_far *= (1 - p_cur)
+
+\end{verbatim}
+
+
+\bibliographystyle{plain}
+%%\bibliographystyle{plainnat}
+\bibliography{bobbib}
+%\printbibliography{bobbib}
+%\nocite{*}
 
 \end{document}
 
