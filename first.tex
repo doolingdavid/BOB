@@ -24,7 +24,7 @@
 \usepackage{enumitem}
 \usepackage{booktabs}
 \usepackage{rotating}
-\usepackage[frenchb]{babel}
+%\usepackage[frenchb]{babel}
 
 
 \definecolor{light-gray}{gray}{0.95}
@@ -61,7 +61,7 @@ Ion Beam Applications SA, such as providing a rigorous robust model to ascertain
 Extracting actionable information from data is changing the fabric of modern business. A class of techniques that transforms data into actionable information goes by the name of Machine Learning \cite{pythonmachinelearning}.
 Machine Learning has recently become a popular method to answer questions and solve problems that are too complex to solve via traditional methods, such as that of accurately predicting cancer survival prognosis curves for individual patients.
 The Surveillance, Epidemiolgy, and End Results (SEER) Program of the National Cancer Institute (NCI) has been collecting data because intuitively researchers feel confident that this data is capturing information that has buried within it useful information in the form of  relationships between the types of data collected (demographic as well as staging information) and the survival outcomes.
-Though this relationship evades capture by traditional methods, it is possible to surface it with the two machine learning techniques known as \textbf{Random Forests} and \textbf{Neural Networks}. These two methods produce very similar results when applied to the SEER dataset, and are based on two almost diametrically opposed learning philosophies, which lends confidence in the validity of the results.
+Though these relationships evade capture by traditional methods, it is possible to surface them with the two machine learning techniques known as \textbf{Random Forests} and \textbf{Neural Networks}. These two methods produce very similar results when applied to the SEER dataset, and are based on two almost diametrically opposed learning philosophies, which lends confidence in the validity of the results.
 
 The Surveillance, Epidemiolgy, and End Results (SEER) Program of the National Cancer Institute (NCI) is the most recognized authoritative source of information on cancer incidence and survival in the United States. SEER currently collects and publishes cancer incidence and survival data from population-based cancer registries covering approximately 28 percent of the US population.
 
@@ -74,7 +74,7 @@ The SEER program registries routinely collect data on patient demographics, prim
 \end{quote}
 
 
-One characterstic of the SEER data and that is shared by many datasets in the medical field 
+One characterstic of the SEER data that is shared by many datasets in the medical field 
 goes by the name of "censored data.'' The SEER data contains the number of months each patient survived, as well as an indicator variable showing whether or not the patient is still alive at the end of the data collection period.
 Methods to deal effectively with this kind of "right-censored data'' include Kaplan-Meier curves
 and Cox's Proportional Hazard models \cite{cam}. The Kaplan-Meier techniques only give estimates for cohorts of patients and are not applicable for predicting the surival curve for a single patient, and the Cox Proportional Hazard models require a fairly restrictive set ot assumptions to be satisifed in order to yield reliable results. In addition, the Cox Proportional Hazard models are not able to capture the nonlinear relationships between the given data fields that go into making predictions; they can only capture the first-order linear relationships.
@@ -140,12 +140,13 @@ Details of this transformation can be found in this blog post \cite{kuhn}, and p
 \section{Machine Learning Algorithms}
 
 
-Extracting actionable information from data is changing the fabric of modern business. A class of techniques that performs this transformation of data into actionable information goes by the name of Machine Learning.
+%Extracting actionable information from data is changing the fabric of modern business. A class %of techniques that performs this transformation of data into actionable information goes by the %name of Machine Learning.
 %Machine Learning has recently become a popular method to answer questions and solve %problems that are too complex to solve via traditional methods. 
 %One class of problems for which these algorithms are approriate is generally referred to as 
 %\textit{function approximation}. SEER has been collecting data because intuitively researchers %feel confident that this data is capturing information that has buried within it useful %information in the form of  relationships between the types of data collected (demographic as %well as staging information) and the survival outcomes.
-Though these relationships often evades capture by traditional methods, it is possible to surface them with the two machine learning techniques known as \textbf{Random Forests} and \textbf{Neural Networks}.
-These two methods produce very similar results when applied to the SEER dataset, and are based on two almost diametrically opposed learning philosophies, which lends confidence in the validity of the results. 
+%Though these relationships often evades capture by traditional methods, it is possible to %surface them with the two machine learning techniques known as 
+\textbf{Random Forests} and \textbf{Neural Networks}
+produce very similar results when applied to the SEER dataset, and are based on two almost diametrically opposed learning philosophies, which lends confidence in the validity of the results. 
 Random Forests are made up of an ensemble of independet \textbf{Decision trees} that are purposefully exposed to only subsets of the data. The general philosophy is that popularized by the book "The Wisdom of Crowds''~\cite{wisdom}.
 The idea is that a large number of independent not necessarily expert opinions converge on the correct answer when averaged. The success of this philosophy of prediction was startingly shown by the success of the political and world event predictions made by the prediction market site Intrade, before its forced closure by the Commodity Futures Trading Commission~\cite{cassidy}. %\footnote{``What killed Intrade?``, John Cassidy, \textit{The New Yorker}, 10 Mar, 2013, %accessed 11 Jan 2016, \url{http://www.newyorker.com/news/john-cassidy/what-killed-%intrade}.} 
  The other method used by IOBS to develop predictive models are called neural networks, and are modelled on how the human brain learns high level concepts from lower level ones. The philosophy behind the training and achieved accuracies of neural network classifiers and predictors is that of going to a seasoned expert. A Neural network trains from repeated exposure to the training data and improves its predictions with each pass over the data. The general philosophy is simlar to that represented by the well-known maxim that it takes 10,000 hours to become an `expert` in any given field~\cite{outliers}.
@@ -368,7 +369,7 @@ Random Forests are frequent winners of the Kaggle machine learning competitions~
 
 \subsection{Neural Networks and Deep Learning}
 
-Neural networks are a biologically-inspired progrmming paradigm that enable computers to learn from observational data~\cite{deeplearning}.
+Neural networks are a biologically-inspired programming paradigm that enable computers to learn from observational data~\cite{deeplearning}.
 %As you may know, \textbf{deep learning} is getting a lot of press and is without any doubt the %hottest topic in the machine learning field.
 Deep learning can be understood as a set of algorithms that were developed to train \textbf{artificial neural networks} with many layers most efficiently.
  Neural networks are a hot topic not only in academic research, but also in big technology companies such as Facebook, Microsoft, and Google who invest heavily in artificial neural networks and deep learning research. As of today, complex neural networks powered by deep learning algorithms are considered as state-of-the-art when it comes to complex problem solving such as image and voice recognition.
@@ -487,7 +488,33 @@ Changing the data in Table~(\ref{tab:boston1940}) so that the address field is c
 Behind the scenes, the apps use the input to the address field to make a call to the Google Maps API to convert the address into a latitude, longitude and elevation.
 These probablities are noticeably higher and reflect both the documented effects of longitude and elevation on cancer treatment and prognosis in the United States.
 
-An additional means of validating the predictions of these models is by comparing their predictions to each other for the same set of input data. IOBS is in the process of performing a systematic analysis of this type; all exploratory investigation to identify trends has shown the same effects for both the random forest and neural network versions of the models for each cacner type. For example, the effects of marital status and gender on survival prognosis in lung cancer (both men and women benefit from being married, but the effects are much more pronounced for men), are born out in both the random forest and neural network models. 
+An additional means of validating the predictions of these models is by comparing their predictions to each other for the same set of input data. 
+Table~(\ref{tab:agree}) shows the strong agreement between the random forest and neural network classifiers for each cancer type. 
+%IOBS is in the process of performing a systematic analysis of this type; all exploratory %investigation to identify trends has shown the same effects for both the random forest and %neural network versions of the models for each cacner type.
+For example, the effects of marital status and gender on survival prognosis in lung cancer (both men and women benefit from being married, but the effects are much more pronounced for men), are born out in both the random forest and neural network models. 
+
+
+
+
+\begin{table}[tbp]
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+%\rowcolors{1}{white}{light-gray}
+Cancer Type & $\%$ agreement 6 months & $\%$ agreement 12 months & $\%$ agreement 60 months \\ 
+\midrule
+Colon & .981 & .971 & .915 \\  
+Breast & .994 & .984 & .938 \\  
+Lung & .861 & .883 & .900 \\  
+\bottomrule
+\end{tabular}
+\caption{\label{tab:agree} Percentage agreement for the Random Forest and Neural Network classifiers for 6, 12, and 60 month survival predictions on the test data for each cancer type.}
+\end{center}
+\end{table}
+
+
+
+
 
 \section{Cancer and Proton/Photon Therapy}
 
@@ -576,6 +603,8 @@ def pmf(h, X)
 \end{verbatim}
 
 
+%\bibliographystyle{plain}
+%\bibliographystyle{ieeetr}
 \bibliographystyle{plain}
 %%\bibliographystyle{plainnat}
 \bibliography{bobbib}
