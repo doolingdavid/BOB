@@ -10,7 +10,7 @@
 
 
 
-
+\usepackage{float}
 %\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 %\usepackage{geometry}
@@ -384,37 +384,22 @@ Deep learning can be understood as a set of algorithms that were developed to tr
  Neural networks are a hot topic not only in academic research, but also in big technology companies such as Facebook, Microsoft, and Google who invest heavily in artificial neural networks and deep learning research. As of today, complex neural networks powered by deep learning algorithms are considered as state-of-the-art when it comes to complex problem solving such as image and voice recognition.
 In addition, the pharmaceutical industry recently started to use deep learning techniques for drug discovery and toxicity prediction, and research has shown that these novel techniques substantially exceed the performance of traditional methods for virtual screening~\cite{toxicity}.
 
-IOBS has chosen to use the neural network implementation Keras developed at MIT.
-Keras was initially developed as part of the research effort of project ONEIROS (Open-ended Neuro-Electronic Intelligent Robot Operating System)~\cite{keras}.
-Keras is a minimalist, highly modular neural networks library, written in Python and capable of running on top of either TensorFlow or Theano.
+%IOBS has chosen to use the neural network implementation Keras developed at MIT.
+%Keras was initially developed as part of the research effort of project ONEIROS (Open-ended %Neuro-Electronic Intelligent Robot Operating System)~\cite{keras}.
+%Keras is a minimalist, highly modular neural networks library, written in Python and capable of %running on top of either TensorFlow or Theano.
 
 \section{Survival Curve Prediction Apps}
+
+
+IOBS has chosen to use the Python scikit-learn implemenation of the Random Forest machine learning classifier~\cite{rf}.
+Random Forests are frequent winners of the Kaggle machine learning competitions~\cite{kagglerf}.
+
+
+
 
 Below is a list of some web applications developed by IOBS.
 For each of the cancer types (colon, breast, lung, and prostate), a model has been developed using random forests and one using neural networks. The models were evaluted using the AUC (Area Under Curve) performance evaluation metric on test data (data not used in the training of the models), typically achieving AUC scores  $\approx .8$, as shown in Table~(\ref{tab:AUC}).\footnote{``AUC | Kaggle,'' Kaggle Website, \url{https://www.kaggle.com/wiki/AUC}, accessed 11 Jan 2016.}
  
-
-\begin{table}[tbp]
-\begin{center}
-\rowcolors{1}{white}{light-gray}
-\begin{tabular}{lrrr}
-\toprule
-%\rowcolors{1}{white}{yellow}
-%\hline
-Model & 6 Months AUC & 12 Months AUC & 60 Months AUC \\ 
-\midrule
-Breast RF &  .846       &     .885           &  .844 \\ 
-Breast NN &   .855      &     .867      &    .836 \\ 
-Colon RF  &     .804          &      .806           &      .828           \\ 
-Colon NN   &     .797          &          .804         &   .841  \\ 
-Lung RF    &      .772               &        .796               &   .874  \\ 
-Lung NN    &        .765              &        .796               &  .875  \\
-\bottomrule
-\end{tabular}
-\caption{\label{tab:AUC} AUC values for the Random Forest and Neural Networks model
-binary classifiers derived from the full survival curve predictions.}
-\end{center}
-\end{table}
 
 
 
@@ -441,13 +426,39 @@ binary classifiers derived from the full survival curve predictions.}
 \end{enumerate}
 
 
+
+
+\begin{table}[H]
+\begin{center}
+\rowcolors{1}{white}{light-gray}
+\begin{tabular}{lrrr}
+\toprule
+%\rowcolors{1}{white}{yellow}
+%\hline
+Model & 6 Months AUC & 12 Months AUC & 60 Months AUC \\ 
+\midrule
+Breast RF &  .846       &     .885           &  .844 \\ 
+Breast NN &   .855      &     .867      &    .836 \\ 
+Colon RF  &     .804          &      .806           &      .828           \\ 
+Colon NN   &     .797          &          .804         &   .841  \\ 
+Lung RF    &      .772               &        .796               &   .874  \\ 
+Lung NN    &        .765              &        .796               &  .875  \\
+\bottomrule
+\end{tabular}
+\caption{\label{tab:AUC} AUC values for the Random Forest and Neural Networks model
+binary classifiers derived from the full survival curve predictions. AUC scores above 0.8 are considered stastistically significant.}
+\end{center}
+\end{table}
+
+
+
 These machine learning models are used to predict survival curves for a given set of input data. 
 The resulting surival curves predict the probablitiy that a patient with the given input data will survive at least up to month $x$. For example, using the Colon Cancer neural network app, and 
 inputing the values listed in Table~(\ref{tab:boston1940}) results in the survival curve depicted in Figure~(\ref{fig:boston1940}); the predicted probablities of living 
 at least 6, 12, and 60 months are .89, .82, and .488, respectively.
 
 
-\begin{table}[tbp]
+\begin{table}[H]
 \begin{center}
 \rowcolors{1}{white}{light-gray}
 \begin{tabular}{lr}
