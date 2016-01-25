@@ -496,7 +496,7 @@ at least 6, 12, and 60 months are .89, .82, and .488, respectively.
   \centering
     \includegraphics[scale=.5]{boston1940}
 \caption{\label{fig:boston1940} Colon Cancer Survival Curve predicted from the data in 
-Table~(\ref{tab:boston1940} using the neural network web app \url{http://ming-cancer.herokuapp.com/}.}
+Table~(\ref{tab:boston1940}) using the neural network web app \url{http://coloncancer.herokuapp.com/}.}
 \end{figure}
 
 
@@ -542,22 +542,23 @@ Lung & .861 & .883 & .900 \\
 
 \section{Cancer and Proton/Photon Therapy}
 
-The Lung, Breast, and Colon Cancer models described above take into consideration only variables that are known when a patient is first diagnosed. In constrast, the Prostate model also includes the SEER variable \codewhite{rx$\_$summ$\_$radiation}, which can take one one of the values:
+The Lung, Breast, and Colon Cancer models described above take into consideration only variables that are known when a patient is first diagnosed. In constrast, the Prostate model also includes the SEER variable \codewhite{rx$\_$summ$\_$radiation}, which can take one of the following SEER defined values:
 
 \begin{itemize}[noitemsep]
-\item Beam radiation
-\item Combination of Beam and either implants or isotopes
-\item None; diagnosed at autopsy
-\item Patient or patient's guardian refused radiation therapy
-\item Radioactive implants
-\item Radiation, NOS - method or source not specified
-\item Radioisotopes
-\item Radiation recommended, unknown if administered
-\item Unknown if radiation administered
+\item \codewhite{Beam radiation}
+\item \codewhite{Combination of Beam and either implants or isotopes}
+\item \codewhite{None; diagnosed at autopsy}
+\item \codewhite{Patient or patient's guardian refused radiation therapy}
+\item \codewhite{Radioactive implants}
+\item \codewhite{Radiation, NOS - method or source not specified}
+\item \codewhite{Radioisotopes}
+\item \codewhite{Radiation recommended, unknown if administered}
+\item \codewhite{Unknown if radiation administered}
 \end{itemize}
 
-As a first pass at investigating the effects of Radiation Therapy, especially Proton Therapy, one can compare different results of the model for different values of the above \codewhite{rx$\_$summ$\_$radiation} variable. For example, using the input data in Table \ref{tab:abq}, the model predicts a .52 probability of surviving 60 months. Changing the value of \codewhite{rx$\_$summ$\_$radiation} to \textbf{Beam radiation} results in a new predicted probability of surviving at least 60 months of .974.
-Clearly, the effects of beam radiation are positive and large; the leap from observation to causality can be hazardous, however, if not analyzed correctly\footnote{``Simpson's Paradox,'' \url{http://www.intuitor.com/statistics/SimpsonsParadox.html}, accessed 11 Jan 2016.}. IOBS is looking into making these conclusions drawn from evidence-based, machine learning models more rigorous by firmly vetting them within the cutting-edge methods of Causality Calculus as pioneered by Judea Pearl.\footnote{Judea Pearl homepage at the University of California, Los Angeles, \url{http://bayes.cs.ucla.edu/jp_home.html}, accessed 11 Jan 2016.}
+As a first pass at investigating the effects of Radiation Therapy, especially Proton Therapy, one can compare different results of the model for different values of the above \codewhite{rx$\_$summ$\_$radiation} variable. For example, using the input data in Table \ref{tab:abq}, the model predicts a .52 probability of surviving 60 months. Changing the value of \codewhite{rx$\_$summ$\_$radiation} to the SEER defined value \codewhite{Beam radiation} results in a new predicted probability of surviving at least 60 months of .974.
+Clearly, the effects of beam radiation are positive and large; the leap from observation to causality can be hazardous, however, if not analyzed correctly\footnote{``Simpson's Paradox,'' \url{http://www.intuitor.com/statistics/SimpsonsParadox.html}, accessed 11 Jan 2016.}.
+% IOBS is looking into making these conclusions drawn from evidence-based, machine learning %models more rigorous by firmly vetting them within the cutting-edge methods of Causality %Calculus as pioneered by Judea Pearl.\footnote{Judea Pearl homepage at the University of %California, Los Angeles, \url{http://bayes.cs.ucla.edu/jp_home.html}, accessed 11 Jan 2016.}
 
 
 
