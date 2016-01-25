@@ -143,7 +143,7 @@ Details of this transformation can be found in this blog post \cite{kuhn}, and p
 
 
 \section{Machine Learning Algorithms}
-
+\label{sec:algorithms}
 
 %Extracting actionable information from data is changing the fabric of modern business. A class %of techniques that performs this transformation of data into actionable information goes by the %name of Machine Learning.
 %Machine Learning has recently become a popular method to answer questions and solve %problems that are too complex to solve via traditional methods. 
@@ -390,9 +390,12 @@ In addition, the pharmaceutical industry recently started to use deep learning t
 
 \section{Survival Curve Prediction Apps}
 
-
+IOBS has  applied the transformation outlined in section~(\ref{subsec:pseudocode}) to the 
+SEER data. The resulting transformed data has been used to build models using both the random forest and neural networks techniques described in section~(\ref{sec:algorithms}).
 IOBS has chosen to use the Python scikit-learn implemenation of the Random Forest machine learning classifier~\cite{rf}.
-Random Forests are frequent winners of the Kaggle machine learning competitions~\cite{kagglerf}.
+Random Forests are frequent winners of the Kaggle machine learning competitions~\cite{kagglerf},
+ The neural network models were built with the Keras implementation developed at MIT.
+Keras was initially developed as part of the research effort of project ONEIROS (Open-ended Neuro-Electronic Intelligent Robot Operating System)~\cite{keras}.
 
 
 
@@ -506,7 +509,7 @@ Table~(\ref{tab:boston1940} using the neural network web app \url{http://ming-ca
 
 Changing the data in Table~(\ref{tab:boston1940}) so that the address field is changed from Boston, Massachusetts to Denver, Colorado but keeping all other variables are unchanged results in the predicted probabilities of living at least 6, 12, and 60 months: .945, .902, .665. 
 Behind the scenes, the apps use the input to the address field to make a call to the Google Maps API to convert the address into a latitude, longitude and elevation.
-These probablities are noticeably higher and reflect both the documented effects of longitude and elevation on cancer treatment and prognosis in the United States.
+These probablities are noticeably higher and reflect the documented effects of both longitude and elevation on cancer treatment and prognosis in the United States.
 
 An additional means of validating the predictions of these models is by comparing their predictions to each other for the same set of input data. 
 Table~(\ref{tab:agree}) shows the strong agreement between the random forest and neural network classifiers for each cancer type. 
