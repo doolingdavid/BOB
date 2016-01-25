@@ -338,7 +338,7 @@ Based on the features in our training set, the decision tree model learns a seri
 %$d = \sqrt{m}$, where $m$ is the number of features in the training set.
 
 
-The goal behind \textbf{ensemble methods} is to combine different classifiers into a meta-classifier that has a better generalization performance than each individual classifier alone. For example, assuming that we collected predictions from 10 experts, ensemble methods would allow us to strategically combine these predictions by the 10 experts to come up with a prediction that is more accurate and robust than the predictions by each individual expert.
+The goal behind \textbf{ensemble methods} is to combine different classifiers into a meta-classifier that has a better generalization performance than each individual classifier alone. For example, assuming that we collected predictions from 10 experts, ensemble methods would allow us to strategically combine these predictions by the 10 experts to come up with a prediction that is more accurate and robust than the predictions by each individual expert. The individual decision trees that make an ensemble are called base learners, and as long as the error rate of each base learner is less than .50, the combined random forest will benefit from the affects of combining predictions to achieve a far greater accuracy.
 
 %To illustrate why ensemble methods can work better than individual classifiers alone, let's apply %the simple concepts of combinatorics. For the following example, we make the assumption that %all \textit{n} base classifiers for a binary classification task have an equal error rate $\epsilon$. %Furthermore, we assume that the classifiers are independent and the error rates are not %correlated. Under these assumptions, we can simply express the error probability of an %ensemble of base classifiers as a probability mass function of a binomial distribution:
 
@@ -370,8 +370,8 @@ Figure~(\ref{fig:ensemble}) illustrates the power of ensemble methods; the Figur
 \end{figure}
 
 
-IOBS has chosen to use the Python scikit-learn implemenation of the Random Forest machine learning classifier~\cite{rf}.
-Random Forests are frequent winners of the Kaggle machine learning competitions~\cite{kagglerf}.
+%IOBS has chosen to use the Python scikit-learn implemenation of the Random Forest machine %learning classifier~\cite{rf}.
+%Random Forests are frequent winners of the Kaggle machine learning competitions~\cite{kagglerf}.
 
 
 
