@@ -458,7 +458,7 @@ binary classifiers derived from the full survival curve predictions. AUC scores 
 These machine learning models are used to predict survival curves for a given set of input data. 
 The resulting surival curves predict the probablitiy that a patient with the given input data will survive at least up to month $x$. For example, using the Colon Cancer neural network app, and 
 inputing the values listed in Table~(\ref{tab:boston1940}) results in the survival curve depicted in Figure~(\ref{fig:boston1940}); the predicted probablities of living 
-at least 6, 12, and 60 months are .89, .82, and .488, respectively.
+at least 6, 12, and 60 months are .89, .83, and .50, respectively.
 
 
 \begin{table}[H]
@@ -491,10 +491,10 @@ at least 6, 12, and 60 months are .89, .82, and .488, respectively.
 
 
 \begin{figure}[!ht]
- \caption{Colon Cancer Survival Curve.}
-  \label{fig:boston1940}
+%\caption{Colon Cancer Survival Curve.}
+%  \label{fig:boston1940}
   \centering
-    \includegraphics[scale=.5]{boston1940}
+    \includegraphics[scale=.8]{boston1940}
 \caption{\label{fig:boston1940} Colon Cancer Survival Curve predicted from the data in 
 Table~(\ref{tab:boston1940}) using the neural network web app \url{http://coloncancer.herokuapp.com/}.}
 \end{figure}
